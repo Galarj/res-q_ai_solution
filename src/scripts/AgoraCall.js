@@ -8,7 +8,7 @@ import AgoraRTC from "agora-rtc-sdk-ng"
 import {AgoraCredentials} from "../constants/index.js";
 
 const appID = AgoraCredentials.AGORA_APP_ID;
-const token = AgoraCredentials.AGORA_APP_CERT;
+const token = AgoraCredentials.AGORA_TOKEN;
 
 /**
  * @class AgoraCallService
@@ -23,32 +23,29 @@ class AgoraCallService{
     }
 
     _initializeClient() {
-        if(!appID || !channel || !token) {
+        if(!appID || !token) {
             console.error("Missing credentials");
             return;
         }
 
         this.client = AgoraRTC.createClient({mode: "rtc", codec: "vp8"})
-        // Note: `this` context will be incorrect here. See suggestions.
         this.setupEnvironmentListeners();
     }
 
     /**
      * Joins an Agora channel with the provided credentials.
-     * @param {string} appID - The Agora App ID.
      * @param {string} channel - The channel name to join.
-     * @param {string} token - The authentication token.
      * @param {number | null} uid - The user ID.
      * @returns {Promise<void>}
      */
-    async joinChannel(appID, channel, token, uid = null)
+    async joinChannel(channel, uid = null)
     {
         if(!this.client) {
             this._initializeClient();
         }
 
         try {
-            const joinedUID = await this.client.join(appID, channel, token, uid);
+            const joinedUID = await this.client.join(appID, channel, token, Number(uid));
             console.log(`User ${joinedUID} has joined the channel ${channel}`);
             this.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
                 encoderConfig: "speech_low_quality", //Optimize voice
@@ -124,9 +121,6 @@ class AgoraCallService{
         // Event handler for when a remote user leaves the channel.
         this.client.on("user-left", (user) => {
             console.log(`${user.uid} has left the channel`)
-            if(this.remoteUsers.has(user.uid)) {
-                this.remoteUsers.delete(user.uid);
-            }
         })
 
         // Event handler for connection state changes.
