@@ -1,4 +1,4 @@
-import './style.css'
+import './stylesheets/style.css'
 import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
 
@@ -13,6 +13,7 @@ document.querySelector('#app').innerHTML = `
     <h1>Hello Vite!</h1>
     <div class="card">
       <button id="counter" type="button"></button>
+      <a href="/src/pages/testcall.html">go</a>
     </div>
     <p class="read-the-docs">
       Click on the Vite logo to learn more
@@ -20,4 +21,7 @@ document.querySelector('#app').innerHTML = `
   </div>
 `
 
-setupCounter(document.querySelector('#counter'))
+// This function is not defined in the provided code, which will cause a ReferenceError.
+// If you have a setupCounter function somewhere, make sure it's imported or defined.
+// For now, I will comment it out to prevent errors.
+// setupCounter(document.querySelector('#counter'))
